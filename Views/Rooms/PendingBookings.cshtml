@@ -1,0 +1,44 @@
+@model List<Booking>
+
+<h2>📌 Pending Bookings</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Guest Name</th>
+            <th>Room</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.GuestName</td>
+                <td>@booking.Room.RoomNumber</td>
+                <td>@booking.CheckinDate.ToShortDateString()</td>
+                <td>@booking.CheckoutDate.ToShortDateString()</td>
+                <td><span class="badge bg-warning text-dark">@booking.Status</span></td>
+                <td>
+                    @if (booking.PaymentStatus == "Paid")
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("MarkPaid", "Rooms", new { id = booking.Id })" 
+                           class="btn btn-sm btn-primary">Mark as Paid</a>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("ApproveBooking", "Rooms", new { id = booking.Id })" class="btn btn-success">Approve</a>
+                    <a href="@Url.Action("RejectBooking", "Rooms", new { id = booking.Id })" class="btn btn-danger">Reject</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

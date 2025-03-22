@@ -1,0 +1,22 @@
+@model Booking
+
+<div class="container mt-5 text-center">
+    <h2 class="text-success">Booking Confirmed! 🎉</h2>
+    <p>Thank you, <strong>@Model.GuestName</strong>, for booking with Cloud9 Suites.</p>
+    
+    <div class="card p-4 mt-4 mx-auto" style="max-width: 500px;">
+        <h4>Booking Details</h4>
+        <p><strong>Hotel:</strong> @Model.Room.Hotel?.Name</p>
+        <p><strong>Room Type:</strong> @Model.Room.RoomType</p>
+        <p><strong>Check-in:</strong> @Model.CheckinDate.ToShortDateString()</p>
+        <p><strong>Check-out:</strong> @Model.CheckoutDate.ToShortDateString()</p>
+        <p><strong>Total Price:</strong> ₱@(@Model.Room.PricePerNight * (Model.CheckoutDate - Model.CheckinDate).Days)</p>
+    </div>
+
+    <a href="/Bookings/Invoice/@Model.Id" class="btn btn-warning mt-3">View Invoice</a>
+
+
+    <p class="mt-4">We have sent a confirmation email to <strong>@Model.GuestEmail</strong>.</p>
+
+    <a href="/" class="btn btn-primary mt-3">Go to Homepage</a>
+</div>

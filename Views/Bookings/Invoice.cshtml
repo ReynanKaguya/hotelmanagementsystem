@@ -1,0 +1,32 @@
+@model Booking
+
+<div class="container mt-5">
+    <div class="card p-4">
+        <h2 class="text-center">Invoice</h2>
+        <p class="text-center text-muted">Invoice Number: <strong>@Model.InvoiceNumber</strong></p>
+
+        <hr>
+
+        <h4>Guest Information</h4>
+        <p><strong>Name:</strong> @Model.GuestName</p>
+        <p><strong>Email:</strong> @Model.GuestEmail</p>
+
+        <h4 class="mt-4">Booking Details</h4>
+        <p><strong>Hotel:</strong> @Model.Room.Hotel?.Name</p>
+        <p><strong>Room Type:</strong> @Model.Room.RoomType</p>
+        <p><strong>Check-in:</strong> @Model.CheckinDate.ToShortDateString()</p>
+        <p><strong>Check-out:</strong> @Model.CheckoutDate.ToShortDateString()</p>
+
+        <h4 class="mt-4">Payment Summary</h4>
+        <p><strong>Price per Night:</strong> ₱@Model.Room.PricePerNight</p>
+        <p><strong>Total Nights:</strong> @(Model.CheckoutDate - Model.CheckinDate).Days</p>
+        <p class="fs-4"><strong>Total Amount:</strong> ₱@(@Model.Room.PricePerNight * (Model.CheckoutDate - Model.CheckinDate).Days)</p>
+
+        <h4 class="mt-4 text-success">Payment Status: @Model.PaymentStatus</h4>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="window.print()">Print Invoice</button>
+            <a href="/" class="btn btn-secondary">Back to Homepage</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+@model List<Booking>
+
+<h2>Billing & Invoices</h2>
+
+<table>
+    <tr>
+        <th>Invoice #</th>
+        <th>Guest Name</th>
+        <th>Room</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>View</th>
+    </tr>
+    @foreach (var booking in Model)
+    {
+        <tr>
+            <td>@booking.InvoiceNumber</td>
+            <td>@booking.GuestName</td>
+            <td>@booking.Room.RoomType</td>
+            <td>₱@(booking.Room.PricePerNight * (booking.CheckoutDate - booking.CheckinDate).Days)</td>
+            <td>@booking.PaymentStatus</td>
+            <td><a href="/Bookings/Invoice/@booking.Id">View Invoice</a></td>
+        </tr>
+    }
+</table>

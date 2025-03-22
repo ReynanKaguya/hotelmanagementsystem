@@ -1,0 +1,32 @@
+@model List<Booking>
+
+<div class="container mt-5">
+    <h2>Pending Bookings</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.GuestName</td>
+                    <td>@booking.Room.RoomType</td>
+                    <td>@booking.CheckinDate.ToShortDateString()</td>
+                    <td>@booking.CheckoutDate.ToShortDateString()</td>
+                    <td>
+                        <a href="/Bookings/Manage?id=@booking.Id&status=Confirmed" class="btn btn-success">Confirm</a>
+                        <a href="/Bookings/Manage?id=@booking.Id&status=Rejected" class="btn btn-danger">Reject</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

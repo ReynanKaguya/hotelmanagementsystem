@@ -1,0 +1,33 @@
+@model List<Booking>
+
+<div class="container mt-5">
+    <h2>Hotel Reports</h2>
+
+    <h4>Total Revenue: ₱@Model.Sum(b => b.Room.PricePerNight * (b.CheckoutDate - b.CheckinDate).Days)</h4>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Hotel</th>
+                <th>Room Type</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.GuestName</td>
+                    <td>@booking.Room.Hotel?.Name</td>
+                    <td>@booking.Room.RoomType</td>
+                    <td>@booking.CheckinDate.ToShortDateString()</td>
+                    <td>@booking.CheckoutDate.ToShortDateString()</td>
+                    <td>₱@(@booking.Room.PricePerNight * (booking.CheckoutDate - booking.CheckinDate).Days)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

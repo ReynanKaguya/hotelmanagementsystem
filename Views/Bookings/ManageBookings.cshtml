@@ -1,0 +1,36 @@
+@model List<Booking>
+
+<h2>Manage Bookings</h2>
+
+<table>
+    <tr>
+        <th>Guest</th>
+        <th>Room</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var booking in Model)
+    {
+        <tr>
+            <td>@booking.GuestName</td>
+            <td>@booking.Room.RoomNumber (@booking.Room.RoomType)</td>
+            <td>@booking.Status</td>
+            <td>
+                @if (booking.Status == "Confirmed")
+                {
+                    <form method="post" action="/Bookings/CheckIn">
+                        <input type="hidden" name="bookingId" value="@booking.Id">
+                        <button type="submit">Check-In</button>
+                    </form>
+                }
+                else if (booking.Status == "Checked-In")
+                {
+                    <form method="post" action="/Bookings/CheckOut">
+                        <input type="hidden" name="bookingId" value="@booking.Id">
+                        <button type="submit">Check-Out</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+</table>

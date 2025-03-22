@@ -1,0 +1,47 @@
+@model Booking
+
+<div class="container mt-5">
+    <h2 class="text-center fw-bold">🛎️ Book Your Stay</h2>
+
+    <div class="card p-4 mt-4 shadow">
+         <!-- ✅ Room Image -->
+            <img src="~/images/@(Model.Room?.ImageUrl ?? "default-room.jpg")" 
+                class="img-fluid rounded shadow-sm mb-3" 
+                alt="Room Image" style="max-height: 300px; object-fit: cover;">
+
+        <!-- ✅ Hotel & Room Details -->
+        <h4 class="fw-bold">🏨 Hotel Details</h4>
+        <p><strong>🏢 Hotel:</strong> @(Model.Room?.Hotel?.Name ?? "Unknown Hotel")</p> 
+        <p><strong>🛏 Room Type:</strong> @(Model.Room?.RoomType ?? "N/A")</p>
+        <p><strong>💰 Price per Night:</strong> ₱@(Model.Room?.PricePerNight ?? 0)</p>
+    </div>
+
+    <!-- ✅ Booking Form -->
+    <form method="post" action="/Bookings/Submit" class="p-4 border rounded bg-light shadow mt-4">
+        <input type="hidden" name="RoomId" value="@Model.Room?.Id" /> <!-- Pass Room ID -->
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">👤 Guest Name</label>
+                <input type="text" class="form-control" name="GuestName" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">📧 Email</label>
+                <input type="email" class="form-control" name="GuestEmail" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">📅 Check-in Date</label>
+                <input type="date" class="form-control" name="CheckinDate" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">📅 Check-out Date</label>
+                <input type="date" class="form-control" name="CheckoutDate" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 fw-bold">✅ Confirm Booking</button>
+    </form>
+</div>

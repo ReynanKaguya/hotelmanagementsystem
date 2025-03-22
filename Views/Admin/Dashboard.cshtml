@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Admin Dashboard</h2>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Total Bookings</h5>
+                <h2>@ViewBag.TotalBookings</h2>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Total Revenue</h5>
+                <h2>₱@ViewBag.TotalRevenue</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/Bookings/Pending" class="btn btn-warning">Manage Pending Bookings</a>
+        <a href="/Admin/Reports" class="btn btn-primary">View Reports</a>
+    </div>
+</div>
