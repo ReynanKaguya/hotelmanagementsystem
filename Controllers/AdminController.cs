@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore; // ✅ Needed for database queries
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization; // ✅ Fix for [Authorize] attribute
+using HotelManagementSystem.Services; // ✅ Ensure EmailService is recognized
+
 
 [Authorize(Roles = "Admin,Staff")] // ✅ Only Admin & Staff can access
 public class AdminController : Controller

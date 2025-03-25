@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HotelManagementSystem.Services; // ✅ Ensure EmailService is recognized
 
 public class HotelsController : Controller
 {
@@ -13,25 +14,29 @@ public class HotelsController : Controller
         _context = context;
     }
 
-    // ✅ Asynchronous Index method (Displays All Hotels)
+    // ✅ Display All Hotels (Fixed to return a list of hotels)
     public async Task<IActionResult> Index()
     {
         var hotels = await _context.Hotels.ToListAsync();
-        return View(hotels);
+        if (!hotels.Any())
+        {
+            return NotFound("❌ No hotels found. Please check database seeding.");
+        }
+
+        return View(hotels); // ✅ Show all hotels
     }
 
-    // ✅ Asynchronous Details method (View Hotel Details)
+    // ✅ Display Hotel Details
     public async Task<IActionResult> Details(int id)
     {
-        var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.Id == id);
-        
+        var hotel = await _context.Hotels
+            .Include(h => h.Rooms) // ✅ Load related rooms
+            .FirstOrDefaultAsync(h => h.Id == id);
+
         if (hotel == null)
         {
             return NotFound();
         }
-
-        // ✅ Ensure ImageUrl is not null
-        hotel.ImageUrl ??= "default-hotel.jpg";
 
         return View(hotel);
     }
@@ -42,16 +47,21 @@ public class HotelsController : Controller
         return View();
     }
 
-    // ✅ Handle Search Requests (Merged duplicate methods)
+    // ✅ Handle Search Requests
     [HttpPost]
-    public async Task<IActionResult> SearchResults(string location, string roomType, DateTime checkin, DateTime checkout)
+    public async Task<IActionResult> SearchResults(string location, string roomType)
     {
         var availableRooms = await _context.Rooms
             .Include(r => r.Hotel)
-            .Where(r => r.Status == "Vacant"
-                && r.RoomType == roomType
-                && (string.IsNullOrEmpty(location) || r.Hotel.Location.Contains(location))) // ✅ Handle null location
+            .Where(r => r.Status == "Vacant" &&
+                        (string.IsNullOrEmpty(roomType) || r.RoomType.Contains(roomType)) &&
+                        (string.IsNullOrEmpty(location) || r.Hotel.Location.Contains(location))) // ✅ Now searches all hotels
             .ToListAsync();
+
+        if (!availableRooms.Any())
+        {
+            return View("NoRoomsAvailable");
+        }
 
         return View("SearchResults", availableRooms);
     }

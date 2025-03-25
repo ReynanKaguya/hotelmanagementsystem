@@ -1,0 +1,20 @@
+@model List<Notification>
+
+<h2>🔔 Notifications</h2>
+
+@if (Model.Any())
+{
+    <ul class="list-group">
+        @foreach (var notification in Model)
+        {
+            <li class="list-group-item @(notification.IsRead ? "" : "bg-light fw-bold")">
+                @notification.Message
+                <span class="text-muted float-end">@notification.CreatedAt.ToShortDateString()</span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No notifications yet.</p>
+}

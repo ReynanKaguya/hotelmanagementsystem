@@ -1,32 +1,53 @@
 @model List<Booking>
 
-<div class="container mt-5">
-    <h2>Pending Bookings</h2>
+@{
+    ViewData["Title"] = "Pending Bookings";
+}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Guest</th>
-                <th>Room</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var booking in Model)
-            {
+<div class="container mt-4">
+    <h2 class="text-center text-warning">🕒 Pending Bookings</h2>
+
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@booking.GuestName</td>
-                    <td>@booking.Room.RoomType</td>
-                    <td>@booking.CheckinDate.ToShortDateString()</td>
-                    <td>@booking.CheckoutDate.ToShortDateString()</td>
-                    <td>
-                        <a href="/Bookings/Manage?id=@booking.Id&status=Confirmed" class="btn btn-success">Confirm</a>
-                        <a href="/Bookings/Manage?id=@booking.Id&status=Rejected" class="btn btn-danger">Reject</a>
-                    </td>
+                    <th>Guest</th>
+                    <th>Email</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model)
+                {
+                    <tr>
+                        <td>@booking.GuestName</td>
+                        <td>@booking.GuestEmail</td>
+                        <td>@booking.Room.RoomType</td>
+                        <td>@booking.CheckinDate.ToShortDateString()</td>
+                        <td>@booking.CheckoutDate.ToShortDateString()</td>
+                        <td>
+                            <form asp-action="ApproveBooking" method="post">
+    <input type="hidden" name="bookingId" value="@booking.Id" />
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+
+<form asp-action="RejectBooking" method="post">
+    <input type="hidden" name="bookingId" value="@booking.Id" />
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">No pending bookings.</p>
+    }
 </div>

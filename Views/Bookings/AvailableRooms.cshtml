@@ -1,11 +1,11 @@
 @model List<Room>
 
 @{
-    ViewData["Title"] = "Search Results";
+    ViewData["Title"] = "Available Rooms";
 }
 
 <div class="container mt-4">
-    <h2 class="text-center text-primary">🔍 Search Results</h2>
+    <h2 class="text-center text-primary">🛏 Available Rooms</h2>
 
     @if (Model != null && Model.Any())
     {
@@ -15,36 +15,30 @@
                 <div class="col">
                     <div class="card h-100 shadow-lg border-0">
                         <!-- ✅ Room Image -->
-                        <img src="~/images/@(room?.Hotel?.ImageUrl ?? "default-hotel.jpg")" 
-                            class="card-img-top rounded-top" 
-                            style="height: 200px; object-fit: cover;" 
-                            alt="@(room?.Hotel?.Name ?? "Hotel Image")">
-
+                        <img src="~/images/@(room?.ImageUrl ?? "default-hotel.jpg")" class="card-img-top rounded-top">
 
                         <div class="card-body">
                             <!-- ✅ Hotel Name & Location -->
                             <h5 class="card-title fw-bold">🏨 @(room?.Hotel?.Name ?? "Unknown Hotel")</h5>
                             <p class="text-muted"><i class="bi bi-geo-alt"></i> @(room?.Hotel?.Location ?? "Unknown Location")</p>
 
-
-
                             <!-- ✅ Room Type & Price -->
-                            <p class="fw-bold">Room Type: @room.RoomType</p>
-                            <p class="fw-bold text-success">₱@room.PricePerNight.ToString("N0") / night</p>
+                            <p class="fw-bold">Room Type: @(room?.RoomType ?? "Unknown")</p>
+                            <p class="fw-bold text-success">₱@((room?.PricePerNight ?? 0).ToString("N0")) / night</p>
 
                             <!-- ✅ Availability Status -->
-                            <p class="badge @(room.Status == "Vacant" ? "bg-success" : "bg-danger")">@room.Status</p>
+                            <p class="badge @(room?.Status == "Vacant" ? "bg-success" : "bg-danger")">@(room?.Status ?? "Unknown")</p>
 
                             <!-- ✅ View Hotel & Book Now Buttons -->
                             <div class="d-flex gap-2">
-                                <a href="@Url.Action("Details", "Hotels", new { id = room?.Hotel?.Id ?? 0 })" 
+                                <a href="@Url.Action("Details", "Hotels", new { id = room?.HotelId ?? 0 })" 
                                    class="btn btn-outline-primary flex-grow-1">
                                     View Hotel
                                 </a>
 
-                                @if (room.Status == "Vacant")
+                                @if (!string.IsNullOrEmpty(room?.Status) && room.Status == "Vacant")
                                 {
-                                    <a href="@Url.Action("Create", "Bookings", new { hotelId = room?.Hotel?.Id ?? 0 })" 
+                                    <a href="@Url.Action("Create", "Bookings", new { hotelId = room?.HotelId ?? 0 })" 
                                        class="btn btn-success flex-grow-1">
                                         Book Now
                                     </a>
@@ -58,6 +52,6 @@
     }
     else
     {
-        <p class="text-center text-muted mt-4">❌ No available rooms matching your criteria.</p>
+        <p class="text-center text-muted mt-4">❌ No available rooms at the moment.</p>
     }
 </div>

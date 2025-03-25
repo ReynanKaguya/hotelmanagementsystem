@@ -83,9 +83,9 @@ namespace HotelManagementSystem.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Location = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    PricePerNight = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     ImageUrl = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PricePerNight = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -233,7 +233,9 @@ namespace HotelManagementSystem.Migrations
                     PricePerNight = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    HotelId = table.Column<int>(type: "int", nullable: false)
+                    HotelId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -284,9 +286,9 @@ namespace HotelManagementSystem.Migrations
                 columns: new[] { "Id", "Description", "ImageUrl", "Location", "Name", "PricePerNight" },
                 values: new object[,]
                 {
-                    { 1, "Experience luxury and comfort.", "P1.jpg", "New York, USA", "Luxury Hotel", 0m },
-                    { 2, "Enjoy stunning ocean views.", "P2.jpg", "Maldives", "Beachfront Resort", 0m },
-                    { 3, "Perfect for business travelers.", "P3.jpg", "Tokyo, Japan", "City Stay", 0m }
+                    { 1, "Experience luxury and comfort.", "P1.jpg", "Manila", "Luxury Hotel", 0m },
+                    { 2, "Enjoy stunning ocean views.", "P2.jpg", "Bohol", "Beachfront Resort", 0m },
+                    { 3, "Perfect for business travelers.", "P3.jpg", "Cebu City", "City Stay", 0m }
                 });
 
             migrationBuilder.CreateIndex(

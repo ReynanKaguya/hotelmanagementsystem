@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using HotelManagementSystem.Services; // ✅ Ensure EmailService is recognized
 
 public class BookingsController : Controller
 {
@@ -18,123 +19,84 @@ public class BookingsController : Controller
     [HttpGet]
     public IActionResult Create(int hotelId)
     {
-        var room = _context.Rooms
-            .Include(r => r.Hotel) // ✅ Load Hotel details
-            .FirstOrDefault(r => r.HotelId == hotelId && r.Status == "Vacant");
+        var availableRooms = _context.Rooms
+            .Include(r => r.Hotel)
+            .Where(r => r.Status == "Vacant" && r.HotelId == hotelId)
+            .ToList();
 
-        if (room == null)
+        if (!availableRooms.Any())
         {
-            return View("NoRoomsAvailable"); // ✅ Show "No rooms available" view
+            return View("NoRoomsAvailable");
         }
 
-        var booking = new Booking 
-        { 
-            Room = room, 
-            RoomId = room.Id 
+        var booking = new Booking
+        {
+            Room = availableRooms.First(),
+            RoomId = availableRooms.First().Id
         };
 
         return View(booking);
     }
 
-    // ✅ Handle booking submission (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Submit(int roomId, string guestName, string guestEmail, DateTime checkin, DateTime checkout)
+    // ✅ Show all available rooms (for "Book Now" page)
+    [HttpGet]
+    public async Task<IActionResult> AvailableRooms()
     {
-        var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId && r.Status == "Vacant");
+        var availableRooms = await _context.Rooms
+            .Include(r => r.Hotel)
+            .Where(r => r.Status == "Vacant")
+            .ToListAsync();
 
-        if (room == null)
+        if (!availableRooms.Any())
         {
-            return NotFound("❌ Room is not available.");
+            return View("NoRoomsAvailable");
         }
 
-        var booking = new Booking
-        {
-            RoomId = roomId,
-            GuestName = guestName,
-            GuestEmail = guestEmail,
-            CheckinDate = checkin,
-            CheckoutDate = checkout,
-            Status = "Confirmed",
-            PaymentStatus = "Pending"
-        };
-
-        _context.Bookings.Add(booking);
-        room.Status = "Occupied";
-        await _context.SaveChangesAsync();
-
-        // ✅ Send confirmation email
-        string subject = "📩 Booking Confirmation - Cloud9 Suites";
-        string message = $"Hello {guestName},\n\nYour booking for {room.RoomType} is confirmed!\nCheck-in: {checkin:yyyy-MM-dd}\nCheck-out: {checkout:yyyy-MM-dd}\n\nThank you!";
-        _emailService.SendEmail(guestEmail, subject, message);
-
-        return RedirectToAction("Confirmation", new { id = booking.Id });
+        return View(availableRooms);
     }
 
-    // ✅ Handle payment processing (POST)
+    // ✅ Handle Booking Submission (POST)
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ProcessPayment(int bookingId, string paymentMethod)
+[ValidateAntiForgeryToken] // ✅ Prevent CSRF errors
+public async Task<IActionResult> Submit(int roomId, string guestName, string guestEmail, DateTime checkin, DateTime checkout, string paymentMethod)
+{
+    if (!ModelState.IsValid) // ✅ Check for missing values
     {
-        var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId);
-
-        if (booking == null || booking.PaymentStatus == "Paid")
+        Console.WriteLine("🚨 ModelState Errors:");
+        foreach (var error in ModelState)
         {
-            return BadRequest("❌ Invalid booking or payment already completed.");
+            Console.WriteLine($"❌ {error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
         }
-
-        // Generate unique invoice number
-        booking.InvoiceNumber = $"INV-{DateTime.Now:yyyyMMddHHmmss}-{booking.Id}";
-        booking.PaymentStatus = "Paid";
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("Invoice", new { id = booking.Id });
+        return View("Create"); // ❌ Prevent crash and return to form
     }
 
-    // ✅ Handle check-in (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CheckIn(int bookingId)
+    var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId && r.Status == "Vacant");
+
+    if (room == null)
     {
-        var booking = await _context.Bookings.Include(b => b.Room).FirstOrDefaultAsync(b => b.Id == bookingId);
-
-        if (booking == null || booking.Status != "Confirmed")
-        {
-            return BadRequest("❌ Invalid check-in request.");
-        }
-
-        booking.Status = "Checked-In";
-        booking.Room.Status = "Occupied";
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("ManageBookings");
+        return NotFound("❌ Room is not available.");
     }
 
-    // ✅ Handle check-out (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CheckOut(int bookingId)
+    var booking = new Booking
     {
-        var booking = await _context.Bookings.Include(b => b.Room).FirstOrDefaultAsync(b => b.Id == bookingId);
+        RoomId = roomId,
+        GuestName = guestName,
+        GuestEmail = guestEmail,
+        CheckinDate = checkin,
+        CheckoutDate = checkout,
+        Status = "Pending",
+        PaymentStatus = paymentMethod == "Cash" ? "Pending" : "Paid",
+        InvoiceNumber = $"INV-{DateTime.Now:yyyyMMddHHmmss}-{roomId}"
+    };
 
-        if (booking == null || booking.Status != "Checked-In")
-        {
-            return BadRequest("❌ Invalid check-out request.");
-        }
+    _context.Bookings.Add(booking);
+    room.Status = "Occupied";
+    await _context.SaveChangesAsync();
 
-        booking.Status = "Checked-Out";
-        booking.Room.Status = "Vacant";
-        await _context.SaveChangesAsync();
+    return RedirectToAction("Confirmation", new { id = booking.Id });
+}
 
-        // ✅ Send "Thank You" email
-        string subject = "🎉 Thank You for Staying with Us!";
-        string message = $"Hello {booking.GuestName},\n\nThank you for staying at Cloud9 Suites! We hope you had a great experience.\n\nWe look forward to welcoming you again soon!";
-        _emailService.SendEmail(booking.GuestEmail, subject, message);
-
-        return RedirectToAction("ManageBookings");
-    }
-
-    // ✅ Show booking confirmation (GET)
+    // ✅ Show Booking Confirmation
     [HttpGet]
     public async Task<IActionResult> Confirmation(int id)
     {
@@ -151,7 +113,7 @@ public class BookingsController : Controller
         return View(booking);
     }
 
-    // ✅ Show invoice (GET)
+    // ✅ Show Booking Invoice
     [HttpGet]
     public async Task<IActionResult> Invoice(int id)
     {
@@ -168,7 +130,7 @@ public class BookingsController : Controller
         return View(booking);
     }
 
-    // ✅ Show pending bookings (GET)
+    // ✅ Show Pending Bookings (For Admin/FrontDesk)
     [HttpGet]
     public async Task<IActionResult> Pending()
     {
@@ -180,21 +142,67 @@ public class BookingsController : Controller
         return View(pendingBookings);
     }
 
-    // ✅ Manage bookings (Approve/Reject)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Manage(int id, string status)
+    // ✅ Manage All Bookings (For Admin/FrontDesk)
+    [HttpGet]
+    public async Task<IActionResult> ManageBookings()
     {
-        var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id);
+        var bookings = await _context.Bookings
+            .Include(b => b.Room)
+            .ThenInclude(r => r.Hotel)
+            .ToListAsync();
 
-        if (booking == null)
-        {
-            return NotFound();
-        }
-
-        booking.Status = status;
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("Pending");
+        return View(bookings);
     }
+
+    // ✅ Approve Booking (Admin/FrontDesk Only)
+    [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> ApproveBooking(int bookingId)
+{
+    var booking = await _context.Bookings.Include(b => b.Room).ThenInclude(r => r.Hotel)
+        .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+    if (booking == null)
+    {
+        return NotFound();
+    }
+
+    booking.Status = "Confirmed"; // ✅ Change status to "Confirmed"
+    await _context.SaveChangesAsync();
+
+    // ✅ Send Approval Email
+    string subject = "🎉 Booking Approved - Cloud9 Suites";
+    string message = $"Hello {booking.GuestName},\n\nGreat news! Your booking for {booking.Room.RoomType} at {booking.Room.Hotel.Name} has been approved!\n\n📅 Check-in: {booking.CheckinDate:yyyy-MM-dd}\n📅 Check-out: {booking.CheckoutDate:yyyy-MM-dd}\n\nWe look forward to welcoming you!\n\nCloud9 Suites Team";
+
+    await _emailService.SendEmailAsync(booking.GuestEmail, subject, message);
+
+    return RedirectToAction("Pending"); // ✅ Go back to Pending Bookings
+}
+
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> RejectBooking(int bookingId)
+{
+    var booking = await _context.Bookings.Include(b => b.Room).ThenInclude(r => r.Hotel)
+        .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+    if (booking == null)
+    {
+        return NotFound();
+    }
+
+    booking.Status = "Rejected"; // ✅ Change status to "Rejected"
+    await _context.SaveChangesAsync();
+
+    // ✅ Send Rejection Email
+    string subject = "❌ Booking Rejected - Cloud9 Suites";
+    string message = $"Hello {booking.GuestName},\n\nWe regret to inform you that your booking for {booking.Room.RoomType} at {booking.Room.Hotel.Name} has been rejected due to unavailability.\n\nWe apologize for any inconvenience.\n\nCloud9 Suites Team";
+
+    await _emailService.SendEmailAsync(booking.GuestEmail, subject, message);
+
+    return RedirectToAction("Pending"); // ✅ Go back to Pending Bookings
+}
+
+
 }

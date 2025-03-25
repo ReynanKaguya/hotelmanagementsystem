@@ -6,17 +6,23 @@
     
     <div class="card p-4 mt-4 mx-auto" style="max-width: 500px;">
         <h4>Booking Details</h4>
-        <p><strong>Hotel:</strong> @Model.Room.Hotel?.Name</p>
-        <p><strong>Room Type:</strong> @Model.Room.RoomType</p>
-        <p><strong>Check-in:</strong> @Model.CheckinDate.ToShortDateString()</p>
-        <p><strong>Check-out:</strong> @Model.CheckoutDate.ToShortDateString()</p>
-        <p><strong>Total Price:</strong> ₱@(@Model.Room.PricePerNight * (Model.CheckoutDate - Model.CheckinDate).Days)</p>
+        <p><strong>🏨 Hotel:</strong> @(Model.Room.Hotel?.Name ?? "Unknown Hotel")</p>
+        <p><strong>🛏 Room Type:</strong> @Model.Room.RoomType</p>
+        <p><strong>📅 Check-in:</strong> @Model.CheckinDate.ToShortDateString()</p>
+        <p><strong>📅 Check-out:</strong> @Model.CheckoutDate.ToShortDateString()</p>
+        
+        @{
+            int days = (Model.CheckoutDate - Model.CheckinDate).Days;
+            if (days < 1) { days = 1; } // Ensure at least 1-day charge
+            decimal totalPrice = Model.Room.PricePerNight * days;
+        }
+        
+        <p><strong>💰 Total Price:</strong> ₱@totalPrice.ToString("N0")</p>
     </div>
 
-    <a href="/Bookings/Invoice/@Model.Id" class="btn btn-warning mt-3">View Invoice</a>
-
+    <a href="@Url.Action("Invoice", "Bookings", new { id = Model.Id })" class="btn btn-warning mt-3">🧾 View Invoice</a>
 
     <p class="mt-4">We have sent a confirmation email to <strong>@Model.GuestEmail</strong>.</p>
 
-    <a href="/" class="btn btn-primary mt-3">Go to Homepage</a>
+    <a href="/" class="btn btn-primary mt-3">🏠 Go to Homepage</a>
 </div>

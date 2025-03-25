@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Guest Feedback";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary">📝 Leave a Review</h2>
+    <p class="text-center text-muted">We value your feedback! Let us know about your stay.</p>
+
+    <form method="post" action="@Url.Action("SubmitFeedback", "Feedback")">
+        <div class="mb-3">
+            <label class="form-label"><i class="bi bi-person"></i> Your Name:</label>
+            <input type="text" name="guestName" class="form-control" placeholder="Enter your name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label"><i class="bi bi-chat-left-text"></i> Your Feedback:</label>
+            <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-send"></i> Submit Feedback
+        </button>
+    </form>
+</div>

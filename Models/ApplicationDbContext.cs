@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using HotelManagementSystem.Models; // ✅ Ensure Feedback is recognized
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
@@ -9,6 +10,9 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

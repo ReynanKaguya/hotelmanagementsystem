@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Booking
 {
@@ -7,13 +8,14 @@ public class Booking
     public int Id { get; set; }
 
     [Required]
+    [ForeignKey("Room")]
     public int RoomId { get; set; }
 
     [Required]
-    public string GuestName { get; set; } = string.Empty; // ✅ Fix: Provide default value
+    public string GuestName { get; set; } = string.Empty;
 
     [Required]
-    public string GuestEmail { get; set; } = string.Empty; // ✅ Fix: Provide default value
+    public string GuestEmail { get; set; } = string.Empty;
 
     [Required]
     public DateTime CheckinDate { get; set; }
@@ -22,13 +24,13 @@ public class Booking
     public DateTime CheckoutDate { get; set; }
 
     [Required]
-    public string Status { get; set; } = "Pending"; // ✅ Already has a default value
+    public string Status { get; set; } = "Pending"; // Pending, Confirmed, Checked-In, Checked-Out
 
     public string InvoiceNumber { get; set; } = string.Empty; // Will be generated after payment
 
-        [Required]
+    [Required]
     public string PaymentStatus { get; set; } = "Pending"; // Default to "Pending"
 
-
-    public Room Room { get; set; } = null!; // ✅ Fix: "null!" tells .NET that we will assign it later
+    // ✅ Define relationship to Room
+    public virtual Room Room { get; set; } = null!;
 }

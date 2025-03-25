@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
+using HotelManagementSystem.Services; // ✅ Ensure EmailService is recognized
+
 
 [Authorize(Roles = "Admin")] // ✅ Only Admin can assign roles
 public class RoleController : Controller
@@ -15,11 +18,24 @@ public class RoleController : Controller
         _roleManager = roleManager;
     }
 
+    // ✅ Show All Roles & Users
+    public IActionResult ListRoles()
+    {
+        var roles = _roleManager.Roles.ToList();
+        return View(roles);
+    }
+
+    // ✅ Show Role Assignment Page
     public IActionResult AssignRoles()
     {
+        var users = _userManager.Users.ToList();
+        var roles = _roleManager.Roles.ToList();
+        ViewBag.Users = users;
+        ViewBag.Roles = roles;
         return View();
     }
 
+    // ✅ Handle Role Assignment
     [HttpPost]
     public async Task<IActionResult> AssignRoles(string email, string role)
     {
@@ -32,6 +48,6 @@ public class RoleController : Controller
         }
 
         await _userManager.AddToRoleAsync(user, role);
-        return RedirectToAction("AssignRoles");
+        return RedirectToAction("ListRoles");
     }
 }

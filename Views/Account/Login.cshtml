@@ -1,24 +1,50 @@
 @{
-    ViewData["Title"] = "Admin Login";
+    ViewData["Title"] = "Login - Cloud9 Suites";
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h3 class="text-center">Admin Login</h3>
-                    <form method="post" action="/Account/Login">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" required>
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <h3 class="text-center fw-bold">
+                        <i class="bi bi-lock-fill"></i> Login to Your Account
+                    </h3>
+                    <p class="text-center text-muted">Access your dashboard and manage bookings</p>
+
+                    <!-- ✅ Show error messages -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Oops!</strong> @Html.ValidationSummary(false)
                         </div>
+                    }
+
+                    <!-- ✅ Login Form -->
+                    <form method="post" action="@Url.Action("Login", "Account")">
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" required>
+                            <label class="form-label"><i class="bi bi-envelope"></i> Email:</label>
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-key"></i> Password:</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
                     </form>
+
+                    <!-- ✅ Forgot Password -->
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("ForgotPassword", "Account")">Forgot Password?</a>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="@Url.Action("Register", "Account")">Sign up</a></p>
+                    </div>
                 </div>
             </div>
         </div>

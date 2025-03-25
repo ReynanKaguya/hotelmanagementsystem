@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using HotelManagementSystem.Services; // ✅ Ensure EmailService is recognized
+
 
 public class RoomsController : Controller
 {

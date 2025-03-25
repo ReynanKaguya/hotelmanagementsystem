@@ -42,6 +42,8 @@ C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\Microsoft.Extensions.Opti
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\MimeKit.dll
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\Mono.TextTemplating.dll
+C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\MySqlConnector.dll
+C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\System.CodeDom.dll
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\System.Composition.AttributedModel.dll
 C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\System.Composition.Convention.dll
@@ -122,6 +124,7 @@ C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.Mvc
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.MvcApplicationPartsAssemblyInfo.cache
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.RazorAssemblyInfo.cache
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.RazorAssemblyInfo.cs
+C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.sourcelink.json
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\scopedcss\bundle\HotelManagementSystem.styles.css
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\ofa40bqe71-b9sayid5wm.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\j9swiz3yzq-90yqlj465b.gz
@@ -185,6 +188,7 @@ C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\a3ygkwa5zy-2z0
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\nezrqnk58p-muycvpuwrr.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\v0zgfp0y55-87fc7y1x7t.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\yfc7ypekbg-mlv21k5csn.gz
+C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\8a7iy0qprc-129pbj88o9.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\56m2ap0rs7-luumino40r.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\rk9jp5nomt-61n19gt1b8.gz
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\ybow45fxk1-xtxxf3hu2r.gz
@@ -262,6 +266,3 @@ C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\refint\HotelManagementSys
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.pdb
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\HotelManagementSystem.genruntimeconfig.cache
 C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\ref\HotelManagementSystem.dll
-C:\xampp\htdocs\HotelManagementSystem\obj\Debug\net9.0\compressed\8a7iy0qprc-129pbj88o9.gz
-C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\MySqlConnector.dll
-C:\xampp\htdocs\HotelManagementSystem\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll

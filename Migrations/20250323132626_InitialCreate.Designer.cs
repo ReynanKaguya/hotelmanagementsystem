@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250322050235_InitialCreate")]
+    [Migration("20250323132626_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -105,7 +105,7 @@ namespace HotelManagementSystem.Migrations
                             Id = 1,
                             Description = "Experience luxury and comfort.",
                             ImageUrl = "P1.jpg",
-                            Location = "New York, USA",
+                            Location = "Manila",
                             Name = "Luxury Hotel",
                             PricePerNight = 0m
                         },
@@ -114,7 +114,7 @@ namespace HotelManagementSystem.Migrations
                             Id = 2,
                             Description = "Enjoy stunning ocean views.",
                             ImageUrl = "P2.jpg",
-                            Location = "Maldives",
+                            Location = "Bohol",
                             Name = "Beachfront Resort",
                             PricePerNight = 0m
                         },
@@ -123,7 +123,7 @@ namespace HotelManagementSystem.Migrations
                             Id = 3,
                             Description = "Perfect for business travelers.",
                             ImageUrl = "P3.jpg",
-                            Location = "Tokyo, Japan",
+                            Location = "Cebu City",
                             Name = "City Stay",
                             PricePerNight = 0m
                         });
@@ -343,6 +343,10 @@ namespace HotelManagementSystem.Migrations
 
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(65,30)");
